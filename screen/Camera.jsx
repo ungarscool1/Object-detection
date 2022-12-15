@@ -25,7 +25,7 @@ export default function Cam({ navigation }) {
       <Camera style={styles.camera} type={CameraType.back} ref={setCamera}>
         <SafeAreaView style={styles.buttonContainer}>
           <Pressable style={styles.button} onPress={() => {
-            camera.takePictureAsync({ onPictureSaved: (picture) => navigation.navigate('Result', { image: picture.base64 }), base64: true, exif: false, imageType: 'png' });
+            camera.takePictureAsync({ onPictureSaved: (picture) => navigation.navigate('Result', { image: picture }), exif: false, imageType: 'png' });
           }}>
             <Text style={styles.text}> Take </Text>
           </Pressable>
