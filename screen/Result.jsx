@@ -1,9 +1,11 @@
 import React from "react";
-import { View, Text, StyleSheet, Button, SafeAreaView, Pressable, ImageBackground } from "react-native";
+import { View, Text, StyleSheet, Button, SafeAreaView, Image, ImageBackground } from "react-native";
 import Tflite from 'tflite-react-native';
 
 export default function App({ route, navigation }) {
   const { image } = route.params;
+  const imageWidth = image.width;
+  const imageHeight = image.height;
   const [object, setObject] = React.useState(null);
   let tflite = new Tflite();
   if (!object) {
@@ -37,15 +39,22 @@ export default function App({ route, navigation }) {
   }
   return (
     <SafeAreaView style={styles.container}>
-      <ImageBackground source={{uri: image.uri}} style={styles.image}>
-        {object && object.map((item, index) => {
+      <Image source={{uri: image.uri}} style={{
+          height: '100%', width: '100%'
+        }} resizeMode="contain" /> 
+      {object && object.map((item, index) => {
+          let left = item["rect"]["y"] * imageWidth / 10;
+          let top = item["rect"]["x"] * imageHeight / 10;
+          let width = item["rect"]["h"] * imageWidth;
+          let height = item["rect"]["w"] * imageHeight / 10;
           return (
-            <View key={index} style={{position: 'absolute', top: image.height*item.rect.y, left: image.width*item.rect.x, width: item.rect.width, height: item.rect.height, borderWidth: 2, borderColor: 'red'}}>
-              <Text style={{color: 'red'}}>{item.detectedClass}</Text>
+            <View key={index} style={[styles.box, { top, left, width, height }]}>
+              <Text style={{ color: 'white', backgroundColor: 'blue' }}>
+                {item.detectedClass + " " + (item.confidenceInClass * 100).toFixed(0) + "%"}
+              </Text>
             </View>
           )
         })}
-      </ImageBackground>
     </SafeAreaView>
   );
 }
@@ -61,4 +70,16 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%'
   },
+  box: {
+    position: 'absolute',
+    borderColor: 'blue',
+    borderWidth: 2,
+  },
+  boxes: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    top: 0,
+  }
 });
