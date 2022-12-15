@@ -1,11 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
-import Register from './screen/Register';
-import Login from './screen/Login';
+import Navigation from './navigation';
+import './firebaseconfig';
 
 export default function App() {
   return (
-    <Login/>
+    <Navigation/>
   );
 }
 
