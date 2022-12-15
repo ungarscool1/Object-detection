@@ -1,15 +1,15 @@
 import React from "react";
-import { View, Text, StyleSheet, Button, SafeAreaView, Image, ImageBackground } from "react-native";
+import { View, Text, StyleSheet, SafeAreaView, Image, Dimensions } from "react-native";
 import Tflite from 'tflite-react-native';
 
 export default function App({ route, navigation }) {
   const { image } = route.params;
-  const imageWidth = image.width;
-  const imageHeight = image.height;
+  const imageWidth = Dimensions.get('window').width;
+  const imageHeight = Dimensions.get('window').height;
   const [object, setObject] = React.useState(null);
+  const [img, setImg] = React.useState(null);
   let tflite = new Tflite();
   if (!object) {
-    console.log(image);
     tflite.loadModel({
       model: 'models/ssd_mobilenet.tflite',// required
       labels: 'models/ssd_mobilenet.txt',  // required
@@ -32,21 +32,21 @@ export default function App({ route, navigation }) {
       if(err)
         console.log(err);
       else {
-        console.log(res);
+        console.log(img);
         setObject(res);
       }
     });
   }
   return (
-    <SafeAreaView style={styles.container}>
-      <Image source={{uri: image.uri}} style={{
+    <View style={styles.container}>
+      <Image source={{uri: image.uri}} ref={setImg} style={{
           height: '100%', width: '100%'
         }} resizeMode="contain" /> 
       {object && object.map((item, index) => {
-          let left = item["rect"]["y"] * imageWidth / 10;
-          let top = item["rect"]["x"] * imageHeight / 10;
+          let left = item["rect"]["y"] * imageWidth;
+          let top = item["rect"]["x"] * imageHeight;
           let width = item["rect"]["h"] * imageWidth;
-          let height = item["rect"]["w"] * imageHeight / 10;
+          let height = item["rect"]["w"] * imageHeight;
           return (
             <View key={index} style={[styles.box, { top, left, width, height }]}>
               <Text style={{ color: 'white', backgroundColor: 'blue' }}>
@@ -55,7 +55,7 @@ export default function App({ route, navigation }) {
             </View>
           )
         })}
-    </SafeAreaView>
+    </View>
   );
 }
 
