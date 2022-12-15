@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, SafeAreaView, Image, Dimensions } from "react-native";
+import { View, Text, StyleSheet, Image, Dimensions } from "react-native";
 import Tflite from 'tflite-react-native';
 
 export default function App({ route, navigation }) {
@@ -7,12 +7,11 @@ export default function App({ route, navigation }) {
   const imageWidth = Dimensions.get('window').width;
   const imageHeight = Dimensions.get('window').height;
   const [object, setObject] = React.useState(null);
-  const [img, setImg] = React.useState(null);
   let tflite = new Tflite();
   if (!object) {
     tflite.loadModel({
-      model: 'models/ssd_mobilenet.tflite',// required
-      labels: 'models/ssd_mobilenet.txt',  // required
+      model: 'models/ssd_mobilenet.tflite',
+      labels: 'models/ssd_mobilenet.txt',
     },
     (err, res) => {
       if(err)
@@ -25,21 +24,21 @@ export default function App({ route, navigation }) {
       model: 'SSDMobileNet',
       imageMean: 127.5,
       imageStd: 127.5,
-      threshold: 0.3,       // defaults to 0.1
-      numResultsPerClass: 2,// defaults to 5
+      threshold: 0.3,
+      numResultsPerClass: 2,
     },
     (err, res) => {
       if(err)
         console.log(err);
       else {
-        console.log(img);
+        console.log(res);
         setObject(res);
       }
     });
   }
   return (
     <View style={styles.container}>
-      <Image source={{uri: image.uri}} ref={setImg} style={{
+      <Image source={{uri: image.uri}} style={{
           height: '100%', width: '100%'
         }} resizeMode="contain" /> 
       {object && object.map((item, index) => {

@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, Button, SafeAreaView, Pressable, Linking } from "react-native";
+import { View, Text, StyleSheet, Button, SafeAreaView, Pressable } from "react-native";
 import { Camera, CameraType } from 'expo-camera';
 
 export default function Cam({ navigation }) {
